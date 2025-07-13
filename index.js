@@ -1,3 +1,4 @@
+//imports
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -6,7 +7,7 @@ require('dotenv').config()
 const app = express()
 const port = 3000
 const { readUsers, writeUsers } = require('./filehelpers')
-const {authmw} = require('./authmw.js')
+const {auth} = require('./authmw')
 
 app.use(express.json())
 
@@ -64,7 +65,7 @@ app.post('/login', async(req, res)=>{
 });
 
 // to post a message 
-app.post('/posts/new', authmw, (req, res)=>{
+app.post('/posts/new', auth, (req, res)=>{
     const user = req.user;
     const content = req.body.content;
 
@@ -87,11 +88,20 @@ app.post('/posts/new', authmw, (req, res)=>{
     res.status(201).json({message:"post added successfully"})
 });
 
+// to see all posts 
+app.get('/posts', auth, (req, res)=>{
+    const user = req.user;
+    const users = readUsers();
+    const  profile = users.find(u=> u.username === user.username);
+
+    res.status(200).json({message: "profile found", posts: profile.message})
+});
 
 // fallback route 
 app.use((req,res)=>{
     res.status(404).json({message:"not found"})
-})
+});
+
 app.listen(port, ()=>{
     console.log(`we ballin at port ${port}`)
-})
+});

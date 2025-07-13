@@ -51,13 +51,30 @@ async function addContent(content){
     }
 };
 
+// to see all posts
+async function seePosts(){
+    try{
+        const response = await axios.get(`${url}/posts`, 
+        {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        });
+
+        console.log(response.data);
+
+    }catch(err){
+        console.log(`can't see posts because ${err}`);
+    }
+}
 
 // function calls 
 async function main(){
     // await register("ishan", "ishan007");
     // await login("ishan", "ishan007");
-    await login("sayanbhowal", "secret007");
-    await addContent('see what i made');
+    // await login("sayanbhowal", "secret007");
+    // await addContent('i know what you made');
+    // await seePosts();
 }
 
-main()
+// main()
